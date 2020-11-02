@@ -1,0 +1,26 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{% static 'FrejunApp/style.css' %}">
+</head>
+
+<body>
+
+    <div class="bg">
+        <div class="container">
+            <form action="{% url 'csv'%}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="file" class="button" name="upload" value="Upload" accept=".csv" required>
+                <button type="submit" class="button" id="uload">Upload </button>
+            </form>
+
+        </div>
+
+
+    </div>
+</body>
+
+</html>
