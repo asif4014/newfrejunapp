@@ -1,1 +1,1 @@
-web: gunicorn FrejunHR.wsgi
+web: gunicorn --timeout 1500 FrejunHR.wsgi
