@@ -6,6 +6,7 @@ import os
 import re
 import requests
 import xml.etree.ElementTree as ET
+from django.conf import settings
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 # Create your views here.
@@ -20,8 +21,13 @@ def csvHandler(request):
     if request.method == "POST":
         csvfile = request.FILES['upload']
         fs = FileSystemStorage()
-        fs.save(csvfile.name, csvfile)
         filename = csvfile.name
+        fullpath = os.path.join(settings.MEDIA_ROOT, filename)
+        if os.path.exists(fullpath):
+            os.remove(fullpath)
+
+        fs.save(csvfile.name, csvfile)
+
         df = pd.read_csv(path+filename)
         patt = re.compile(
             r'\b(mobile\sn.*|contact\sn.*|telephone\sn.*|phone\sn.*)\b', flags=re.I)
