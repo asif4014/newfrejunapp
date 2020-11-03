@@ -5,5 +5,6 @@ from . import views
 urlpatterns = [
     path('', views.home, name='home'),
     path('csv', views.csvHandler, name='csv'),
+    path('load', views.load, name='load'),
 
 ]

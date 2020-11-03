@@ -1,0 +1,97 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'FrejunApp/style.css' %}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <title>Document</title>
+    <style>
+        .lds-dual-ring {
+            display: inline-block;
+            width: 80px;
+            height: 80px;
+            padding-left: 50%;
+            padding-top: 200px;
+        }
+
+        .lds-dual-ring:after {
+            content: " ";
+            display: block;
+            width: 64px;
+            height: 64px;
+            margin: 8px;
+            border-radius: 50%;
+            border: 6px solid rgb(92, 90, 90);
+            border-color: #000 transparent #000 transparent;
+            animation: lds-dual-ring 1.2s linear infinite;
+        }
+
+        @keyframes lds-dual-ring {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="blankBG">
+        <div class="lds-dual-ring">Stay tuned loading</div>
+        <div class="cbody">
+            <center>
+                <br><br><br><br>
+                <h1>Results of the uploaded file</h1>
+
+                <table border="1">
+                    <tr class="mainc">
+                        <!-- <th>Name</th> -->
+                        <th>Mobile No</th>
+                        <th>Status</th>
+                    </tr>
+                </table>
+            </center>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            console.log("inside jquery");
+            $.ajax({
+                type: 'GET',
+                data: {
+                    file: '{{ file }}'
+                },
+                url: "{% url 'csv' %}",
+                contentType: "application/json",
+                beforeSend: function () {
+                    $('.lds-dual-ring').show();
+                    $('.cbody').hide();
+                },
+                complete: function () {
+                    $('.lds-dual-ring').hide();
+                    $('.cbody').show();
+                },
+                success: function (data) {
+                    printdata(data)
+                },
+                error: function (xhr, status, error) {
+                    var err = eval("(" + xhr.responseText + ")");
+                    alert(err.Message);
+                }
+            })
+        })
+        function printdata(data) {
+            $.each(data.mob, function (index, value) {
+                $(".mainc").after("<tr><td>" + value + "</td><td>" + data.status[index] + "</td></tr>");
+            });
+        }
+    </script>
+</body>
+
+</html>

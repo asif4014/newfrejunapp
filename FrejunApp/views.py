@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.http import JsonResponse
 from django.core.files.storage import FileSystemStorage
 import pandas as pd
 from pathlib import Path
@@ -17,7 +18,7 @@ def home(request):
     return render(request, 'FrejunApp/index.html')
 
 
-def csvHandler(request):
+def load(request):
     if request.method == "POST":
         csvfile = request.FILES['upload']
         fs = FileSystemStorage()
@@ -27,27 +28,34 @@ def csvHandler(request):
             os.remove(fullpath)
 
         fs.save(csvfile.name, csvfile)
+        return render(request, 'FrejunApp/loading.html', {'file': filename})
 
-        df = pd.read_csv(path+filename)
-        patt = re.compile(
-            r'\b(mobile\sn.*|contact\sn.*|telephone\sn.*|phone\sn.*)\b', flags=re.I)
-        mob = []
 
-        for i in df.columns:  # for every column i am checking for column name with matching pattern
-            if re.search(patt, i):  # pattern matching happening here
-                # if column name matched the pattern then i converting that column to list
-                mob = df[i].to_list()
-        # final_data = df[['Full name', 'Mobile Number']]
-        # print(final_data['Mobile Number'].tolist())
-        # res = final_data['Mobile Number'].tolist()
-        status = []
-        #resDict = {}
-        for m in mob:
-            status.append(checkStatus(m))
-        # status.append(checkStatus(m))
-        context = {'mob': mob, 'status': status, 'len': len(mob)}
-        # print(mob, status)
-        return render(request, 'FrejunApp/result.html', context)
+def csvHandler(request):
+    filename = request.GET['file']
+    print("got the file"+filename)
+    df = pd.read_csv(path+filename)
+    patt = re.compile(
+        r'\b(mobile\sn.*|contact\sn.*|telephone\sn.*|phone\sn.*)\b', flags=re.I)
+    mob = []
+
+    for i in df.columns:  # for every column device-widthi am checking for column name with matching pattern
+        if re.search(patt, i):  # pattern matching happening here
+            # if column name matched the pattern then i converting that column to list
+            mob = df[i].to_list()
+    # final_data = df[['Full name', 'Mobile Number']]
+    # print(final_data['Mobile Number'].tolist())
+    # res = final_data['Mobile Number'].tolist()
+    status = []
+    #resDict = {}
+    strmob = []
+    for m in mob:
+        status.append(checkStatus(m))
+        strmob.append(str(m))
+    # status.append(checkStatus(m))
+    context = {'mob': strmob, 'status': status}
+    # print(mob, status)
+    return JsonResponse(context)
 
 
 def checkStatus(mobile):

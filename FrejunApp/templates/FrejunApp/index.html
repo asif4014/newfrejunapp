@@ -11,7 +11,7 @@
 
     <div class="bg">
         <div class="container">
-            <form action="{% url 'csv'%}" method="POST" enctype="multipart/form-data">
+            <form action="{% url 'load'%}" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
                 <input type="file" class="button" name="upload" value="Upload" accept=".csv" required>
                 <button type="submit" class="button" id="uload">Upload </button>
