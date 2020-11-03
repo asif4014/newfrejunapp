@@ -26,7 +26,7 @@ SECRET_KEY = 'vt)^!4dob))-przr6q_5kpokd&w#0(utc#93(t9*isk4yo+$@-'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['frejunapp.herokuapp.com', 'localhost']
+ALLOWED_HOSTS = ['newfrejunapp.herokuapp.com', 'localhost']
 
 
 # Application definition
